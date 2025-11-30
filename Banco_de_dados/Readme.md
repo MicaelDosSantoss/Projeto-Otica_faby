@@ -87,8 +87,3 @@ Tabela destinada aos administradores do sistema.
 
 ---
 
-## 📧 Contato
-
-Caso tenha dúvidas ou queira expandir o projeto, fique à vontade para contribuir ou enviar sugestões!
-
----
