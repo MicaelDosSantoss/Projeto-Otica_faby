@@ -1,0 +1,97 @@
+-- Cria o banco e seleciona
+CREATE DATABASE IF NOT EXISTS project_db_faby;
+USE project_db_faby;
+
+-- TABELA: usuario
+CREATE TABLE usuario (
+    Id_Usuario INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100),
+    Sexo VARCHAR(10),
+    Data_Nascimento DATE,
+    Idade INT,
+    Email VARCHAR(150),
+    Senha VARCHAR(200)
+);
+
+-- TABELA: marca
+CREATE TABLE marca (
+    Id_Marca INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100),
+    Imagem VARCHAR(255)
+);
+
+-- TABELA: forma
+CREATE TABLE forma (
+    Id_Forma INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100)
+);
+
+-- TABELA: material
+CREATE TABLE material (
+    Id_Material INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100)
+);
+
+-- TABELA: oculos
+CREATE TABLE oculos (
+    Id_Oculos VARCHAR(50) PRIMARY KEY,
+    Modelo VARCHAR(100),
+    Forma_FK INT,
+    Material_FK INT,
+    Marca_FK INT,
+    Valor DECIMAL(10,2),
+    Quantidade INT,
+    Descricao TEXT,
+    Sobre_Produto TEXT,
+    Data_Recebimento DATETIME,
+    Imagem VARCHAR(255),
+    -- chaves estrangeiras (sem ON DELETE/ON UPDATE)
+    FOREIGN KEY (Forma_FK) REFERENCES forma(Id_Forma),
+    FOREIGN KEY (Material_FK) REFERENCES material(Id_Material),
+    FOREIGN KEY (Marca_FK) REFERENCES marca(Id_Marca)
+);
+
+-- TABELA: carrinho
+CREATE TABLE carrinho (
+    Id_Carrinho INT AUTO_INCREMENT PRIMARY KEY,
+    Usuario_FK INT,
+    FOREIGN KEY (Usuario_FK) REFERENCES usuario(Id_Usuario)
+);
+
+-- TABELA: itens_carrinho
+CREATE TABLE itens_carrinho (
+    Id_Item INT AUTO_INCREMENT PRIMARY KEY,
+    Carrinho_FK INT,
+    Oculos_FK VARCHAR(50),
+    Quantidade INT,
+    FOREIGN KEY (Carrinho_FK) REFERENCES carrinho(Id_Carrinho),
+    FOREIGN KEY (Oculos_FK) REFERENCES oculos(Id_Oculos)
+);
+
+-- TABELA: pagamento
+CREATE TABLE pagamento (
+    Id_Pagamento INT AUTO_INCREMENT PRIMARY KEY,
+    Id_Usuario_FK INT,
+    Metodo VARCHAR(20),
+    Valor_Total DECIMAL(10,2),
+    Status VARCHAR(20),
+    Data_Pagamento DATETIME,
+    Nome_Cartao VARCHAR(100),
+    Ultimos_4 CHAR(4),
+    Parcelas INT,
+    Bandeira VARCHAR(20),
+    Endereco_Entrega VARCHAR(500),
+    FOREIGN KEY (Id_Usuario_FK) REFERENCES usuario(Id_Usuario)
+);
+
+-- TABELA: adm
+CREATE TABLE adm (
+    Id_Usuario INT PRIMARY KEY,
+    Nome VARCHAR(100),
+    Sexo VARCHAR(10),
+    Data_Nascimento DATE,
+    Idade INT,
+    Email VARCHAR(150),
+    Senha VARCHAR(200),
+    FOREIGN KEY (Id_Usuario) REFERENCES usuario(Id_Usuario)
+);

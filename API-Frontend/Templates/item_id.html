@@ -1,0 +1,121 @@
+ <!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ oculos_id['Modelo'] }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/item_style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+   <!-- TOPO (Header idêntico ao da Home) -->
+   <header class="header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='home/logo.png') }}" alt="Logo da loja" style="height: 90px;">
+        </div>
+        <div class="user-icon" id="userIconContainer">
+            <img src="{{ url_for('static', filename='home/icon.png') }}" alt="Ícone do usuário" style="height: 50px; cursor: pointer;" id="userIcon">
+
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-info">
+                    <p class="user-name">{{ current_user.Nome }}</p>
+                    <p class="user-email">{{ current_user.Email }}</p>
+                </div>
+                <hr>
+                <a href="{{ url_for('venda.ver_carrinho') }}" class="dropdown-item">
+                    <span>🛒</span> Meu Carrinho
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout">
+                    <span>🚪</span> Sair
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="product-container">
+        <div class="product-card">
+            <div class="product-images">
+                {% if oculos_id['Imagem'] %}
+                <img src="{{ url_for('static', filename='uploads/' + oculos_id['Imagem']) }}" alt="{{ oculos_id['Modelo'] }}" class="main-image">
+                {% else %}
+                <div class="main-image-placeholder">Sem Imagem</div>
+                {% endif %}
+
+                <h1 class="product-title">{{ oculos_id['Modelo'] }}</h1>
+            </div>
+
+            <div class="product-details">
+                <!-- Imagem da marca -->
+                <img src="{{ url_for('static', filename='marcas/marcas_itens/' + oculos_id['Nome_Marca'] + '.png') }}"
+                     alt="Marca {{ oculos_id['Nome_Marca'] }}" class="brand-logo-item">
+
+                <div class="price-section">
+                    <p class="current-price">R$ {{ "%.2f" | format(oculos_id['Valor']) }}</p>
+                    <p class="installments">À vista ou até *10x de R$ {{ "%.2f" | format(oculos_id['Valor'] / 10) }}*</p>
+                    <p class="stock-info">Restam apenas {{ oculos_id['Quantidade'] }} unidades!</p>
+                </div>
+
+                <div class="actions">
+                    <button class="add-to-cart-btn" onclick="adicionarAoCarrinho('{{ oculos_id['Id_Oculos'] }}')">
+                        <i class="fas fa-shopping-cart"></i>
+                        ADICIONAR AO CARRINHO
+                    </button>
+                </div>
+            </div>
+
+            <div class="product-info-box">
+                <h2 class="info-title">Sobre o Produto</h2>
+                <h3 class="info-subtitle">Detalhes:</h3>
+                <ul class="features-list">
+                    <li>Material: {{ oculos_id['Nome_Material'] }}</li>
+                    <li>Forma: {{ oculos_id['Nome_Forma'] }}</li>
+                    <li>Modelo: {{ oculos_id['Modelo'] }}</li>
+                </ul>
+            </div>
+            <div class="product-info-box">
+                <h2 class="info-title">Descrição do Produto</h2>
+                <p class="description">{{ oculos_id['Descricao'] }}</p>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Usado para abrir e fechar o menu do usuário
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
+
+        userIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!document.getElementById('userIconContainer').contains(e.target)) {
+                userDropdown.classList.remove('show');
+            }
+        });
+
+        function adicionarAoCarrinho(oculosId) {
+            fetch('{{ url_for('venda.adicionar_ao_carrinho') }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ oculos_id: oculosId, quantidade: 1 }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.mensagem) {
+                    alert(data.mensagem);
+                } else if (data.erro) {
+                    alert('Erro: ' + data.erro);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro:', error);
+                alert('Erro ao adicionar ao carrinho.');
+            });
+        }
+    </script>
+</body>
+</html>

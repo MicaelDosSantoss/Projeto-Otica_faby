@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Loja de Óculos</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth_style.css') }}">
+</head>
+<body>
+  <div class="container">
+    <!-- Tela de Login -->
+    <form id="formLogin" class="active" method="POST" action="{{ url_for('auth.logar_usuario') }}">
+      <h1>Login</h1>
+      
+      {% if error %}
+      <div class="error-message">{{ error }}</div>
+      {% endif %}
+      
+      <div class="input-group">
+        <label for="loginEmail">E-mail</label>
+        <input type="email" id="loginEmail" name="Email" placeholder="Digite seu e-mail" required>
+      </div>
+      <div class="input-group">
+        <label for="loginSenha">Senha</label>
+        <input type="password" id="loginSenha" name="Senha" placeholder="Digite sua senha" required>
+      </div>
+      <button type="submit">Entrar</button>
+      <p id="loginMsg"></p>
+      <p class="trocarTela">Não tem conta? <a href="#" id="linkCadastro">Cadastre-se</a></p>
+    </form>
+
+    <!-- Tela de Cadastro -->
+    <form id="formCadastro" method="POST" action="{{ url_for('auth.registrar_usuario') }}">
+      <h1>Cadastro</h1>
+      <div class="input-group">
+        <label for="nome">Nome completo</label>
+        <input type="text" id="nome" name="Nome" placeholder="Digite seu nome" required>
+      </div>
+      <div class="input-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="Email" placeholder="exemplo@email.com" required>
+      </div>
+      <div class="input-group">
+        <label for="sexo">Sexo</label>
+        <select name="Sexo" id="sexo" required>
+            <option value="">Selecione</option>
+            <option value="Feminino">Feminino</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Outro">Outro</option>
+        </select>
+      </div>
+      <div class="input-group">
+        <label for="dataNascimento">Data de nascimento</label>
+        <input type="date" id="dataNascimento" name="Data_Nascimento" required>
+      </div>
+      <div class="input-group">
+        <label for="senha">Senha</label>
+        <input type="password" id="senha" name="Senha" placeholder="Crie uma senha" required>
+      </div>
+      <div class="input-group">
+        <label for="confirmarSenha">Confirmar senha</label>
+        <input type="password" id="confirmarSenha" placeholder="Repita sua senha" required>
+      </div>
+      
+      <button type="submit">Cadastrar</button>
+      <p id="cadastroMsg"></p>
+      <p class="trocarTela">Já tem conta? <a href="#" id="linkLogin">Entrar</a></p>
+    </form>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/auth_script.js') }}"></script>
+</body>
+</html>

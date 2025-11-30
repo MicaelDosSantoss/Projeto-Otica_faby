@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Endereço de Entrega</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Endereço de Entrega</h2>
+
+    <form class="space-y-4" method="POST" action="{{ url_for('venda.salvar_endereco', id_compra=id_compra) }}">
+      
+      <p class="text-sm text-gray-600 mb-4">Preencha os dados para a entrega do seu pedido.</p>
+
+      <!-- Rua -->
+      <div>
+        <label class="block text-sm font-medium mb-1" for="rua">Rua</label>
+        <input id="rua" name="Rua" type="text" required class="w-full border rounded px-3 py-2" placeholder="Ex: Av. Brasil" />
+      </div>
+
+      <!-- Número -->
+      <div>
+        <label class="block text-sm font-medium mb-1" for="numero">Número</label>
+        <input id="numero" name="Numero" type="text" required class="w-full border rounded px-3 py-2" placeholder="Ex: 123" />
+      </div>
+
+      <!-- Bairro -->
+      <div>
+        <label class="block text-sm font-medium mb-1" for="bairro">Bairro</label>
+        <input id="bairro" name="Bairro" type="text" required class="w-full border rounded px-3 py-2" placeholder="Ex: Centro" />
+      </div>
+
+      <!-- Cidade -->
+      <div>
+        <label class="block text-sm font-medium mb-1" for="cidade">Cidade</label>
+        <input id="cidade" name="Cidade" type="text" required class="w-full border rounded px-3 py-2" placeholder="Ex: São Paulo" />
+      </div>
+
+      <!-- Estado -->
+      <div>
+        <label class="block text-sm font-medium mb-1" for="estado">Estado (UF)</label>
+        <input id="estado" name="Estado" type="text" required maxlength="2" class="w-full border rounded px-3 py-2" placeholder="Ex: SP" />
+      </div>
+
+      <!-- CEP -->
+      <div>
+        <label class="block text-sm font-medium mb-1" for="cep">CEP</label>
+        <input id="cep" name="CEP" type="text" required class="w-full border rounded px-3 py-2" placeholder="Ex: 00000-000" />
+      </div>
+
+      <!-- Complemento (Opcional) -->
+      <div>
+        <label class="block text-sm font-medium mb-1" for="complemento">Complemento (Opcional)</label>
+        <input id="complemento" name="Complemento" type="text" class="w-full border rounded px-3 py-2" placeholder="Ex: Apartamento 101" />
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700">
+        Continuar para o Pagamento
+      </button>
+    </form>
+  </div>
+</body>
+</html>

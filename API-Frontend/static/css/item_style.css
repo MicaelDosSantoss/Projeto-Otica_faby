@@ -1,0 +1,334 @@
+/* Reset Básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+:root {
+  --bg-dark: #1f1f1f;
+  --card-bg: #595959;
+  --highlight: #d8b44a;
+  --text-light: #ffffff;
+  --text-gray: #e0e0e0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: var(--bg-dark);
+    color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px 0;
+}
+
+/* --- Header (Idêntico ao da Home) --- */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  width: 100%;
+}
+
+.logo img {
+  height: 90px;
+}
+
+.user-icon {
+  position: relative;
+}
+
+.user-icon img {
+  height: 50px;
+}
+
+/* Dropdown do usuário */
+.user-dropdown {
+  position: absolute;
+  top: 60px;
+  right: 0;
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+  min-width: 220px;
+  padding: 1rem;
+  display: none;
+  z-index: 1000;
+}
+
+.user-dropdown.show {
+  display: block;
+  animation: fadeIn 0.2s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.user-info {
+  margin-bottom: 0.5rem;
+}
+
+.user-name {
+  font-weight: 600;
+  font-size: 1rem;
+  color: var(--text-light);
+  margin-bottom: 0.25rem;
+}
+
+.user-email {
+  font-size: 0.85rem;
+  color: var(--text-gray);
+  margin: 0;
+}
+
+.user-dropdown hr {
+  border: none;
+  border-top: 1px solid #444;
+  margin: 0.75rem 0;
+}
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  color: var(--text-light);
+  text-decoration: none;
+  border-radius: 8px;
+  transition: background-color 0.2s;
+  font-size: 0.95rem;
+}
+
+.dropdown-item:hover {
+  background-color: #3a3a3a;
+}
+
+.dropdown-item.logout:hover {
+  background-color: #d32f2f;
+  color: white;
+}
+
+.dropdown-item span {
+  font-size: 1.2rem;
+}
+
+/* --- Container Principal do Produto --- */
+.product-container {
+    width: 95%;
+    max-width: 1200px;
+    display: flex;
+    justify-content: center;
+}
+
+.product-card {
+    display: grid;
+    /* Definindo 3 colunas para a estrutura: Imagens | Detalhes | Info */
+    grid-template-columns: 1.5fr;
+    gap: 20px;
+    background-color: #707070; /* Cor de fundo principal do cartão (Similar ao original) */
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    color: #f0f0f0;
+    width: 100%;
+}
+
+/* Ajuste de Layout para telas menores */
+@media (max-width: 1024px) {
+    .product-card {
+        /* Muda para 1 coluna em telas menores, empilhando os blocos */
+        grid-template-columns: 1fr;
+    }
+
+    .product-details {
+        /* Move a logo/preço para cima em telas menores */
+        order: -1;
+        text-align: center;
+    }
+
+    .product-info-box {
+        margin-top: 20px;
+    }
+}
+
+/* --- Seção de Imagens --- */
+.product-images {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.main-image {
+    width: 100%;
+    max-width: 500px;
+    height: auto;
+    border-radius: 4px;
+    object-fit: contain; /* Garante que a imagem se encaixe bem */
+}
+
+.product-title {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #f0f0f0;
+}
+
+.thumbnail-gallery {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.thumbnail-gallery img {
+    width: 100px;
+    height: auto;
+    opacity: 0.7;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: all 0.2s;
+}
+
+.thumbnail-gallery img:hover {
+    opacity: 1;
+    border-color: #ffcc00;
+}
+
+/* --- Seção de Detalhes (Central) --- */
+.product-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+}
+
+.brand-logo-item {
+    width: 120px;
+    margin-bottom: 20px;
+    object-fit: contain;
+}
+
+.price-section {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.current-price {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #000000; /* Cor preta destacada (similar ao original) */
+    text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+}
+
+.installments {
+    font-size: 1.2rem;
+    color: #66ff66; /* Cor de destaque verde (similar ao original) */
+    margin: 5px 0;
+}
+
+.installments strong {
+    font-weight: 800;
+}
+
+.stock-info {
+    font-size: 1rem;
+    color: #ff6666; /* Cor de alerta vermelho */
+    margin-top: 10px;
+}
+
+.actions {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 300px;
+}
+
+.actions button {
+    padding: 15px;
+    border: none;
+    border-radius: 5px;
+    font-weight: bold;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+.add-to-cart-btn {
+    background-color: #ffcc00; /* Dourado/Amarelo para adicionar */
+    color: #000000;
+}
+
+.add-to-cart-btn:hover {
+    background-color: #e6b800;
+    transform: translateY(-2px);
+}
+
+.buy-now-btn {
+    background-color: #c0c0c0; /* Cinza claro para comprar */
+    color: #000000;
+}
+
+.buy-now-btn:hover {
+    background-color: #a3a3a3;
+    transform: translateY(-2px);
+}
+
+.add-to-cart-btn i {
+    margin-right: 10px;
+}
+
+/* --- Seção de Informações do Produto (Lateral) --- */
+.product-info-box {
+    background-color: #8c8c8c; /* Fundo ligeiramente mais claro para a seção de info */
+    padding: 20px;
+    border-radius: 4px;
+}
+
+.info-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #ffcc00; /* Dourado/Amarelo para o título */
+    margin-bottom: 5px;
+    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.info-subtitle {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 15px;
+}
+
+.features-list {
+    list-style: none;
+    padding: 0;
+}
+
+.features-list li {
+    background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 10 10"><circle cx="5" cy="5" r="4" fill="%23ffcc00"/></svg>') no-repeat left 6px;
+    padding-left: 20px;
+    margin-bottom: 12px;
+    line-height: 1.4;
+    font-size: 0.95rem;
+}
+
+.features-list li strong {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.description {
+    display: flex;
+}

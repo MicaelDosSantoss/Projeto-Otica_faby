@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="{{ url_for('static', filename='home/logo.png') }}" type="image/x-icon">
+    <title>Meu Carrinho</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/carrinho.css') }}">
+</head>
+<body>
+    <!-- TOPO -->
+    <header class="header">
+        <div class="logo">
+            <img src="{{ url_for('static', filename='home/logo.png') }}" alt="Logo da loja" style="height: 90px;">
+        </div>
+        <div class="user-icon" id="userIconContainer">
+            <img src="{{ url_for('static', filename='home/icon.png') }}" alt="Ícone do usuário" style="height: 50px; cursor: pointer;" id="userIcon">
+
+            <div class="user-dropdown" id="userDropdown">
+                <div class="user-info">
+                    <p class="user-name">{{ current_user.Nome }}</p>
+                    <p class="user-email">{{ current_user.Email }}</p>
+                </div>
+                <hr>
+                <a href="{{ url_for('venda.ver_carrinho') }}" class="dropdown-item">
+                    <span>🛒</span> Meu Carrinho
+                </a>
+                <a href="{{ url_for('auth.logout') }}" class="dropdown-item logout">
+                    <span>🚪</span> Sair
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <div class="modal">
+        <h2>Meu Carrinho</h2>
+
+        {% if itens %}
+            <!-- Itens do Carrinho -->
+            {% for item in itens %}
+            <div class="cart-item" data-item-id="{{ item['Id_Item'] }}">
+                {% if item['Imagem'] %}
+                <img src="{{ url_for('static', filename='uploads/' + item['Imagem']) }}" alt="{{ item['Modelo'] }}" />
+                {% else %}
+                <img src="{{ url_for('static', filename='uploads/default.png') }}" alt="Produto sem imagem" />
+                {% endif %}
+
+                <div class="item-info">
+                    <strong>{{ item['Modelo'] }}</strong>
+                    <p class="item-price">R$ {{ "%.2f" | format(item['Valor']) }}</p>
+                </div>
+
+                <div class="qty-control">
+                    <button onclick="updateQty('{{ item['Id_Item'] }}', 'minus', {{ item['Quantidade'] }})">-</button>
+                    <span id="qty-{{ item['Id_Item'] }}">{{ item['Quantidade'] }}</span>
+                    <button onclick="updateQty('{{ item['Id_Item'] }}', 'plus', {{ item['Quantidade'] }})">+</button>
+                </div>
+
+                <strong class="item-total" id="total-{{ item['Id_Item'] }}">
+                    R$ {{ "%.2f" | format(item['Valor'] * item['Quantidade']) }}
+                </strong>
+            </div>
+            {% endfor %}
+
+            <div class="actions">
+                <button onclick="window.location.href='{{ url_for('oculos.home') }}'">CONTINUAR COMPRANDO</button>
+                <button onclick="clearCart()">LIMPAR CARRINHO</button>
+            </div>
+
+            <div class="totals">
+                <div>Subtotal: <strong id="subtotal">R$ {{ "%.2f" | format(total) }}</strong></div>
+                <div>Total do Pedido: <strong id="total">R$ {{ "%.2f" | format(total) }}</strong></div>
+            </div>
+
+            <button class="checkout-btn" onclick="window.location.href='{{ url_for('venda.endereco_view', id_compra='carrinho') }}'">
+                FINALIZAR COMPRA
+            </button>
+
+        {% else %}
+            <div class="empty-cart">
+                <p>Seu carrinho está vazio.</p>
+                <button onclick="window.location.href='{{ url_for('oculos.home') }}'">
+                    VOLTAR PARA A LOJA
+                </button>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // Usado para abrir e fechar o menu do usuário
+        const userIcon = document.getElementById('userIcon');
+        const userDropdown = document.getElementById('userDropdown');
+
+        userIcon.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!document.getElementById('userIconContainer').contains(e.target)) {
+                userDropdown.classList.remove('show');
+            }
+        });
+
+        // Atualizar quantidade
+        function updateQty(itemId, action, currentQty) {
+            let newQty = currentQty;
+            
+            if (action === 'plus') {
+                newQty++;
+            } else if (action === 'minus' && currentQty > 1) {
+                newQty--;
+            } else if (action === 'minus' && currentQty === 1) {
+                if (!confirm('Deseja remover este item do carrinho?')) {
+                    return;
+                }
+                // Remover item
+                removeItem(itemId);
+                return;
+            }
+
+            // Atualizar no backend
+            fetch('{{ url_for("venda.atualizar_quantidade") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ item_id: itemId, quantidade: newQty }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.mensagem) {
+                    location.reload(); // Recarrega a página para atualizar os valores
+                } else if (data.erro) {
+                    alert('Erro: ' + data.erro);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro:', error);
+                alert('Erro ao atualizar quantidade.');
+            });
+        }
+
+        // Remover item
+        function removeItem(itemId) {
+            fetch('{{ url_for("venda.remover_item") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ item_id: itemId }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.mensagem) {
+                    location.reload();
+                } else if (data.erro) {
+                    alert('Erro: ' + data.erro);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro:', error);
+                alert('Erro ao remover item.');
+            });
+        }
+
+        // Limpar carrinho
+        function clearCart() {
+            if (!confirm('Tem certeza que deseja limpar todo o carrinho?')) {
+                return;
+            }
+
+            fetch('{{ url_for("venda.limpar_carrinho") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.mensagem) {
+                    location.reload();
+                } else if (data.erro) {
+                    alert('Erro: ' + data.erro);
+                }
+            })
+            .catch((error) => {
+                console.error('Erro:', error);
+                alert('Erro ao limpar carrinho.');
+            });
+        }
+    </script>
+</body>
+</html>

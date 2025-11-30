@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pagamento</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-8 rounded-2xl shadow-lg w-full max-w-md">
+    <h2 class="text-2xl font-bold mb-6 text-center">Pagamento</h2>
+
+    <!-- Valor total -->
+    <div class="mb-6 text-center">
+      <p class="text-gray-600">Valor total:</p>
+      <p id="valor-pagamento" class="text-2xl font-bold text-green-700">R$ {{ "%.2f" | format(total) }}</p>
+    </div>
+
+    <!-- Método de pagamento (somente cartão) -->
+    <div class="mb-6">
+      <label class="block text-sm font-medium mb-2">Método de Pagamento</label>
+      <div class="flex gap-3">
+        <button type="button" id="btn-cartao" class="flex-1 border rounded-lg py-2 bg-green-600 text-white hover:bg-green-700 transition">
+          Cartão
+        </button>
+      </div>
+    </div>
+
+    <!-- Formulário principal -->
+    <form id="form-pagamento" class="space-y-4" method="POST" action="{{ url_for('venda.finalizar_pagamento') }}">
+
+      <input type="hidden" name="Valor_Total" value="{{ total }}">
+      <input type="hidden" name="Metodo" value="Cartão">
+
+      <!-- Pagamento com Cartão -->
+      <div id="form-cartao-campos" class="space-y-4">
+        <div>
+          <label class="block text-sm font-medium mb-1" for="nome-cartao">Nome no Cartão</label>
+          <input id="nome-cartao" name="Nome_Cartao" type="text" placeholder="Nome completo" class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <div>
+          <label class="block text-sm font-medium mb-1" for="numero-cartao">Número do Cartão</label>
+          <input id="numero-cartao" type="text" placeholder="0000 0000 0000 0000" class="w-full border rounded px-3 py-2" required oninput="capturarUltimos4(this.value)" />
+          <input type="hidden" name="Ultimos_4" id="input-ultimos-4">
+        </div>
+
+        <div class="flex gap-4">
+          <div class="flex-1">
+            <label class="block text-sm font-medium mb-1" for="validade">Validade</label>
+            <input id="validade" type="text" placeholder="MM/AA" class="w-full border rounded px-3 py-2" required />
+          </div>
+          <div class="flex-1">
+            <label class="block text-sm font-medium mb-1" for="cvv">CVV</label>
+            <input id="cvv" type="text" placeholder="123" class="w-full border rounded px-3 py-2" required />
+          </div>
+        </div>
+
+        <!-- Parcelamento -->
+        <div>
+          <label class="block text-sm font-medium mb-1" for="parcelas">Parcelamento</label>
+          <select id="parcelas" name="Parcelas" class="w-full border rounded px-3 py-2">
+            <option value="1">1x sem juros</option>
+            <option value="2">2x sem juros</option>
+            <option value="3">3x sem juros</option>
+            <option value="4">4x sem juros</option>
+            <option value="5">5x sem juros</option>
+            <option value="6">6x sem juros</option>
+            <option value="7">7x sem juros</option>
+            <option value="8">8x sem juros</option>
+            <option value="9">9x sem juros</option>
+            <option value="10">10x sem juros</option>
+          </select>
+        </div>
+
+        <!-- Bandeira -->
+        <div>
+          <label class="block text-sm font-medium mb-1" for="bandeira">Bandeira</label>
+          <input id="bandeira" name="Bandeira" type="text" placeholder="Visa, Master, etc." class="w-full border rounded px-3 py-2" required />
+        </div>
+
+        <button type="submit" class="w-full bg-green-600 text-white py-2 rounded hover:bg-green-700">
+          Pagar com Cartão
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Captura últimos 4 dígitos do cartão
+    function capturarUltimos4(valor) {
+      const apenasDigitos = valor.replace(/\D/g, "");
+      document.getElementById("input-ultimos-4").value = apenasDigitos.slice(-4);
+    }
+  </script>
+
+</body>
+</html>
