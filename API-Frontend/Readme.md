@@ -111,4 +111,3 @@ As rotas são organizadas em três Blueprints principais: `auth`, `oculos` e `ve
 4.  **Acesso:** A aplicação estará disponível em `http://127.0.0.1:5000/` (ou a porta padrão do Flask).
 
 ---
-*Documentação gerada por **Manus AI***
